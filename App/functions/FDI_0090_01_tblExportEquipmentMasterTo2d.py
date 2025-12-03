@@ -20,8 +20,6 @@ import sys
 import traceback
 
 import requests
-from common.CD0201_updateStartEndDateOfUse import update_start_and_end_date_of_use
-from common.CD0202_updateEndDateOfUse import update_end_date_of_use
 from core.checkMstConsistency import CheckMstConsistency
 from core.config_reader import read_config
 from core.constants import Constants
@@ -30,6 +28,10 @@ from core.geoserverRequest import GeoServerRequest
 from core.logger import LogManager
 from core.secretProperties import SecretPropertiesSingleton
 from core.validations import Validations
+from functions.common.CD0201_updateStartEndDateOfUse import (
+    update_start_and_end_date_of_use,
+)
+from functions.common.CD0202_updateEndDateOfUse import update_end_date_of_use
 
 log_manager = LogManager()
 logger = log_manager.get_logger(
@@ -366,7 +368,7 @@ def create_sqlview_and_register(layer_ids):
     # 9-1. SQLView定義の作成
     try:
         template_path = os.path.join(
-            os.path.dirname(__file__), "../../geoServerSettings/sqlview_2d.xml"
+            os.path.dirname(__file__), "../geoServerSettings/sqlview_2d.xml"
         )
         with open(template_path, "r", encoding="utf-8") as f:
             xml_template = f.read()
