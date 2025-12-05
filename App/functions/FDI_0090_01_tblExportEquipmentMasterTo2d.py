@@ -287,7 +287,9 @@ def create_or_refresh_matview(matview_no_list, matview_yes_list):
 
     # 6-2. リフレッシュクエリ生成
     for layer_id in matview_yes_list:
-        ddl_queries.append(f"REFRESH MATERIALIZED VIEW {db_mv_2d_schema}.{layer_id}")
+        ddl_queries.append(
+            f"REFRESH MATERIALIZED VIEW CONCURRENTLY {db_mv_2d_schema}.{layer_id}"
+        )
 
     # 6-3. DDL・SQLクエリ実行
     for db_host in db_mv_hosts:
