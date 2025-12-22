@@ -1,6 +1,6 @@
 """
 
-FDI_0090_01_tblExportEquipmentMasterTo2d.py
+FDI_0090_tblExportEquipmentMasterTo2d.py
 
 処理名:
     TBL出力（設備データ管理マスタDB→2D用最終断面テーブル）
@@ -22,7 +22,6 @@ import traceback
 import requests
 from common.CD0201_updateStartEndDateOfUse import update_start_and_end_date_of_use
 from common.CD0202_updateEndDateOfUse import update_end_date_of_use
-from core.checkMstConsistency import CheckMstConsistency
 from core.config_reader import read_config
 from core.constants import Constants
 from core.database import Database
@@ -30,6 +29,7 @@ from core.geoserverRequest import GeoServerRequest
 from core.logger import LogManager
 from core.secretProperties import SecretPropertiesSingleton
 from core.validations import Validations
+from util.checkMstConsistency import CheckMstConsistency
 
 log_manager = LogManager()
 logger = log_manager.get_logger(
@@ -285,7 +285,9 @@ def create_or_refresh_matview(matview_no_list, matview_yes_list):
 
     # 6-2. リフレッシュクエリ生成
     for layer_id in matview_yes_list:
-        ddl_queries.append(f"REFRESH MATERIALIZED VIEW {db_mv_2d_schema}.{layer_id}")
+        ddl_queries.append(
+            f"REFRESH MATERIALIZED VIEW CONCURRENTLY {db_mv_2d_schema}.{layer_id}"
+        )
 
     # 6-3. DDL・SQLクエリ実行
     for db_host in db_mv_hosts:
@@ -366,7 +368,7 @@ def create_sqlview_and_register(layer_ids):
     # 9-1. SQLView定義の作成
     try:
         template_path = os.path.join(
-            os.path.dirname(__file__), "../../geoServerSettings/sqlview_2d.xml"
+            os.path.dirname(__file__), "../geoServerSettings/sqlview_2d.xml"
         )
         with open(template_path, "r", encoding="utf-8") as f:
             xml_template = f.read()
@@ -379,7 +381,7 @@ def create_sqlview_and_register(layer_ids):
 
     # 9-2. ベクタレイヤ定義追加のREST APIを実行
     db_mst_schema = secret_props.get("db_mst_schema")
-    db_mv_2d_schema = secret_props.get("db_mv_2d_schema")
+    db_mv_2d_schema = secret_props.get("db_mv_schema")
     domain_name = secret_props.get("domain_name")
     geoserver_workspace = secret_props.get("geoserver_workspace")
     postgis_store = secret_props.get("postgis_store_name")
