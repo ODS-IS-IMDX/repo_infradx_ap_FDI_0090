@@ -16,7 +16,7 @@ jobs:
       AWS_ACCOUNT: 814396194035                                           # AWSアカウントID
       IAM_ROLE_NAME: infradx-dev-iam-role-oidc                            # IAM Role名を記載
       INSTANCE_ID: "i-0be9d3845dd335f6c"                                  # インスタンスID
-      BUCKET_NAME: "sentan-python-app-deploy-test-bucket"                 # S3バケット名
+      BUCKET_NAME: "infradx-dev-s3-bckt-cicd-814396194035"                # S3バケット名
       REPO_PATH: "App/geoServerSettings/"                                 # リポジトリパス
       REPO: "repo_infradx_ap_FDI_0090"                                    # リポジトリ名
       INSTANCE_PATH: "/infradx/app/infradx-batch-db/geoServerSettings"    # インスタンスパス 
